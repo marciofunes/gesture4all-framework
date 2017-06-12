@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt-br" lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <style>
+    video {
+      width: 100%;
+      height: auto;
+    }
+  </style>  
+  <script src="js/tiltandtap.js"></script>
+  <script src="js/jquery-2.1.1.min.js"></script>
+  <script src="js/gesture4all.js"></script>
+
+  <script>
+    window.focus();   
+    var mytat = new tiltandtap({
+      tiltLeft :  {callback:left}, //volume-
+      tiltRight : {callback:right}, //volume+
+      tiltUp :    {callback:up}, //play
+      tiltDown:   {callback:down}, //pause
+      tiltClockwise: {callback:clockwise}, //time+
+      tiltConterclockwise : {callback: cc} //time-
+    });
+
+    function left(){
+     //Audio function
+      setVolume(-.1); //down by 10%
+     //feedback
+      audioMenosVolume(); //audivel
+      blinkMenosVolume(); //visual
+      window.navigator.vibrate(50); //tátil
+      document.getElementById("result").innerHTML = "esquerda"; //visual
+      console.log("esquerda"); //log     
+    }
+    function right(){
+     //Audio function
+      setVolume(.1) //up by 10%
+     //feedback
+      audioMaisVolume(); //audivel
+      blinkMaisVolume(); //visual
+      window.navigator.vibrate(50); //tátil
+      document.getElementById("result").innerHTML = "direita"; //visual
+      console.log("direita"); //log     
+    }
+    function up (){
+     //Play function
+      if(player.pause){
+        player.play();
+      }
+     //feedback
+      audioPlay(); //audivel
+      blinkPlay(); //visual
+      window.navigator.vibrate(50); //tátil
+      document.getElementById("result").innerHTML = "cima"; //visual
+      console.log("cima"); //log   
+    }
+    function down(){
+     //Pause function
+      if(player.play){
+         player.pause();
+      }
+     //feedback
+      audioPause(); //audivel
+      blinkPause(); //visual
+      window.navigator.vibrate(50); //tátil
+      document.getElementById("result").innerHTML = "baixo"; //visual
+      console.log("baixo"); //log
+    }
+    function clockwise(){
+     //Time function
+      setTime(10);
+     //feedback
+      audioAvancar(); //audivel
+      blinkAvancar(); //visual
+      window.navigator.vibrate(50); //tátil
+      document.getElementById("result").innerHTML = "horário"; //visual
+      console.log("horário"); //log
+    }
+    function cc(){
+     //Time function
+      setTime(-10);
+     //feedback
+      audioRetroceder(); //audivel
+      blinkRetroceder(); //visual
+      window.navigator.vibrate(50); //tátil
+      document.getElementById("result").innerHTML = "anti-horário"; //visual
+      console.log("anti-horário"); //log        
+    }
+
+    function teste(){
+      audioRetroceder();
+      audioPlay();
+      audioMenosVolume();
+      audioAvancar();
+      audioPause();
+      audioMaisVolume();
+    }
+    </script>
+
+    <title>Gesture4ALL</title>
+  </head>
+
+  <body>
+    <header id="header">
+     <div>
+      <a href="" class="logo">
+        <span class="symbol"><img src="images/gesture.svg" alt="" /></span><span class="title">gesture4All</span><br>
+      </a>
+    </div>
+  </header>
+  <b>Opção 1: Testando com Smartphone</b><br>
+  <a href="index.html">Voltar a tela anterior</a><br>
+  <video autoplay width="400" id="player" controls preload="auto">
+    <source src="assets/olhardigital.webm" type='video/webm; codecs="vp8, vorbis"' />
+    <source src="assets/olhardigital.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+    Seu navegador não suporta vídeo em HTML 5.
+  </video><br>
+  Último gesto reconhecido: <b><span id="result"></span></b><br>
+  Instruções:
+  <ul>
+    <li>Play: <b>Incline para trás</b></li>
+    <li>Pause: <b>Incline para frente</b></li>
+    <li>Mais Volume: <b>Incline para direita</b></li>
+    <li>Menos Volume: <b>Incline para esquerda</b></li>
+    <li>Avançar: <b>Gire para direita</b></li>
+    <li>Retroceder: <b>Gire para esquerda</b></li>
+    <li><button type="button" onclick="teste()">Testar audio</button></li>
+  </ul>
+</body>
+</html>

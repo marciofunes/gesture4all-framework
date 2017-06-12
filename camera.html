@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt-br" lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <!-- Scripts -->
+  <script src="js/gest.js"></script>
+  <script src="js/jquery-2.1.1.min.js"></script>
+  <script src="js/gesture4all.js"></script>
+
+  <script type="text/javascript">
+    window.focus();
+    var change = true;
+    $(window).keypress(function(e) {
+     if (e.which == 13) {
+       change = !change;
+       audioModoAlternado();
+       console.log("modo alternado");    
+    }
+    });
+
+    $(function() {
+      function setVolume(value){
+       var vol = player.volume;
+           vol += value;
+       if (vol >= 0 && vol <= 1) {
+          player.volume = vol;
+       } else {
+          player.volume = (vol < 0) ? 0 : 1;                        
+       }
+      }
+
+      document.addEventListener('gest', function(gesture) {             
+        var gesto = '';
+
+        if(gesture.up){
+          //Play function
+            player.play();
+          //feedback
+            audioPlay(); //audivel
+            blinkPlay(); //visual
+            document.getElementById("gesto").innerHTML = "Mão para cima"; //visual
+            console.log("up"); //log      
+        }
+        if(gesture.down){
+          //Pause function
+            player.pause();
+          //feedback
+            audioPause(); //audivel
+            blinkPause(); //visual
+            document.getElementById("gesto").innerHTML = "Mão para baixo"; //visual
+            console.log("down"); //log
+        }
+        if(gesture.left){
+          if(change == true){
+            //Audio function
+              setVolume(-.2);
+            //feedback
+              audioMenosVolume(); //audivel
+              blinkMenosVolume(); //visual
+              document.getElementById("gesto").innerHTML = "Mão para esquerda"; //visual
+              console.log("left"); //log              
+          }
+          if(change == false){
+            //Time function
+              setTime(-10);
+            //feedback
+              audioRetroceder(); //audivel
+              blinkRetroceder(); //visual
+              document.getElementById("gesto").innerHTML = "Mão para esquerda"; //visual
+              console.log("left"); //log
+          }
+        }// end gesture.left
+
+        if(gesture.right){
+            if(change == true){
+            //Audio function
+              setVolume(.2);
+            //feedback
+              audioMaisVolume(); //audivel
+              blinkMaisVolume(); //visual
+              document.getElementById("gesto").innerHTML = "Mão para direita"; //visual
+              console.log("left"); //log              
+          }
+          if(change == false){
+            //Time function
+              setTime(10);
+            //feedback
+              audioAvancar(); //audivel
+              blinkAvancar(); //visual
+              document.getElementById("gesto").innerHTML = "Mão para direita"; //visual
+              console.log("left"); //log
+          }
+          }// end gesture.right
+
+      }, false);
+
+      gest.start(); /* Inicia o Gest.js */
+      gest.options.sensitivity(85); /* Controla a quantidade de detecção de bordas */
+      gest.options.skinFilter(false); /* Opção para ambiente com muita luminosidade */
+      gest.options.debug(false); /* Opção para verificar o contorno detectado*/
+
+    });
+  </script>
+
+  <!-- End Scripts (global) -->
+
+  <title>Gesture4ALL</title>
+</head>
+
+<body>
+
+  <header id="header">
+   <div>
+    <a href="" class="logo">
+      <span class="symbol"><img src="images/gesture.svg" alt="" /></span><span class="title">gesture4All</span><br>
+    </a>
+  </div>
+</header>
+
+<h2>Opção 2: Testando com Câmera</h2>
+<a href="index.html">Voltar a tela anterior</a><br>
+<video id="player" controls preload="auto">
+  <source src="assets/olhardigital.webm" type='video/webm; codecs="vp8, vorbis"' />
+  <source src="assets/olhardigital.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+</video><br>
+Último gesto reconhecido: <b><span id="gesto"></span></b><br>
+Instruções:
+<ul>
+  <li>Play: <b>Movimento de mão subindo</b></li>
+  <li>Pause: <b>Movimento de mão descendo</b></li>
+  <li>Mais Volume: <b>Movimento de mão para direita</b></li>
+  <li>Menos Volume: <b>Movimento de mão para equerda</b></li>
+  <li>Alternar modo de uso: <b>Tecla Enter</b></li>
+  <li>Avançar o vídeo: <b>Alternar modo de uso e depois mão para direita</b></li>
+  <li>Retroceder o vídeo: <b>Alternar modo de uso e depois mão para esquerda</b></li> 
+</ul>
+
+</body>
+
+</html>

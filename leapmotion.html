@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt-br" lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <!-- Scripts -->
+  <script src='js/gesture4all.js'></script>
+  <script src="js/jquery-2.1.1.min.js"></script>
+  <script src="//js.leapmotion.com/0.2.0-beta1/leap.min.js"></script>
+
+  <script type="text/javascript">
+    window.focus();
+    var change = true;
+    $(window).keypress(function(e) {
+     if (e.which == 13) {
+       change = !change;
+       audioModoAlternado();
+       console.log("modo alternado");    
+     }
+   });
+
+    function setPositiveTime(){
+      var time = player.currentTime;
+      time = time + 0.01;
+      player.currentTime = time;      
+    }
+
+    function setNevativeTime(){
+      var time = player.currentTime;
+      time = time - 0.01;
+      player.currentTime = time; 
+    }
+    function myTimer(){
+      var t = new Date();
+      audioPlay(); //audivel
+      blinkPlay(); //visual
+    } 
+    
+    Leap.loop(function(obj) {
+      var hands = obj.hands.length;
+      var fingers = obj.pointables.length;
+
+      document.getElementById("hands").innerHTML = hands;
+      document.getElementById("fingers").innerHTML = fingers;
+      document.getElementById("conectado").innerHTML = "conectado";
+
+      if(change == true){
+        if(hands == 1 && fingers == 5){
+         //play function: 
+          player.play();
+         //feedback
+          document.getElementById("leap_pose").innerHTML = "Mão aberta"; //visual
+
+          for(var i = 0; i < obj.hands.length; i++){
+            var hand = obj.hands[i];
+            var palmPosition = hand.palmPosition[1];
+            position = palmPosition / 300
+            if(position > 0 && position < 1){
+             player.volume = position;
+             console.log(position);
+           }
+         }
+
+      }//if hands
+
+      if(hands == 1 && fingers == 0){
+         //pause function 
+          player.pause();
+         //feddback
+          audioPause();
+          document.getElementById("leap_pose").innerHTML = "Mão fechada"; //visual
+        }
+    } // if true
+
+    if(change == false){
+      player.play();
+      if(hands == 1 && fingers == 2){
+      //Time function
+       setPositiveTime(); //+ 0.5 seconds
+      //feedback
+       audioavancar.play(); //Audivel
+       document.getElementById("leap_pose").innerHTML = "Dois dedos"; //visual
+       console.log(player.currentTime); //log
+     }
+     if(hands == 1 && fingers == 4){
+      //Time function
+       setNevativeTime();
+      //feedback
+       audioretroceder.play(); //Audivel
+       document.getElementById("leap_pose").innerHTML = "Quatro dedos"; //visual
+       console.log(player.currentTime); //log
+    } 
+  }
+
+    }); //end loop
+
+  </script>
+
+  <!-- End Scripts (global) -->
+
+  <title>Gesture4ALL</title>
+</head>
+
+<body>
+
+  <header id="header">
+   <div>
+    <a href="" class="logo">
+      <span class="symbol"><img src="images/gesture.svg" alt="" /></span><span class="title">gesture4All</span><br>
+    </a>
+  </div>
+</header>
+
+<h2>Opção 4: Testando com Leap Motion</h2>
+<a href="index.html">Voltar a tela anterior</a><br>
+<video id="player" controls preload="auto">
+  <source src="assets/olhardigital.webm" type='video/webm; codecs="vp8, vorbis"' />
+  <source src="assets/olhardigital.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+</video><br>
+Leap Motion: <b><span id="conectado"></span></b><br>
+Último gesto reconhecido: <b><span id="leap_pose"></span></b></br>
+Mãos reconhecidas: <b><span id="hands"></span></b></br>
+Dedos reconhecidos: <b><span id="fingers"></span></b></br>
+Instruções:<br>
+<ul>
+  <li>Play: <b>Mão aberta</b></li>
+  <li>Pause: <b>Mão Fechada</b></li>
+  <li>Mais Volume: <b>Levantar a mão aberta</b></li>
+  <li>Menos Volume: <b>Abaixar a mão aberta</b></li>
+  <li>Alternar modo de uso: <b>Tecla Enter</b></li>
+  <li>Avançar o vídeo: <b>Alternar modo de uso e depois mostrar dois dedos</b></li>
+  <li>Retroceder o vídeo: <b>Alternar modo de uso e depois mostrar quatro dedos</b></li>
+</ul>  
+</body>
+
+</html>

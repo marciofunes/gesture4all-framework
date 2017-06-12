@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <!-- Scripts -->
+  <script src='js/myo.js'></script>
+  <script src='js/gesture4all.js'></script>
+  <script src="js/jquery-2.1.1.min.js"></script>
+
+  <script type="text/javascript">
+    window.focus();
+    Myo.connect('com.myojs.gesture4all');
+    Myo.on('status', function(data){
+      $('.events').prepend(JSON.stringify(data, null, 2));
+      document.getElementById("myo_status").innerHTML = "conectado";
+      Myo.myos[0].requestBatteryLevel();
+    });
+
+    Myo.on('battery_level', function(bat){
+      document.getElementById("myo_bat").innerHTML = bat;
+    });
+
+    Myo.on('fingers_spread', function(){
+    //play function:
+    player.play();  
+    //feedback:
+     this.vibrate("short"); //tátil
+     audioPlay(); //audivel
+     blinkPlay(); //visual
+     document.getElementById("myo_pose").innerHTML = "Mão Aberta"; //visual  
+     console.log('Fist!');
+   });
+
+    Myo.on('fist', function(){
+   //pause function
+   player.pause();
+   //feddback
+     this.vibrate("short"); //tátil
+     audioPause(); //audivel
+     blinkPause(); //visual       
+     document.getElementById("myo_pose").innerHTML = "Mão Fechada"; //visual
+     console.log("fist");
+   });
+
+    var change = true;
+    $(window).keypress(function(e) {
+      if (e.which == 13) {         
+       change = !change;
+       audioModoAlternado();
+       console.log(change);    
+     }
+   });
+
+    Myo.on('wave_in', function(){
+      if(change == true){
+          //Audio function
+          setVolume(-.2);
+          //feedback
+           this.vibrate("short"); //tátil
+           audioMenosVolume(); //audivel
+           blinkMenosVolume(); //visual 
+           document.getElementById("myo_pose").innerHTML = "Mão para dentro"; //visual
+           console.log("wave_in");
+         }
+         if(change == false){
+          //Time function
+          setTime(-10);
+          //feedback
+            this.vibrate("short"); //tátil
+            audioRetroceder(); //audivel
+            blinkRetroceder(); //visual 
+            document.getElementById("myo_pose").innerHTML = "Mão para dentro"; //visual
+            console.log("wave_in");
+          }
+        });
+
+    Myo.on('wave_out', function(){
+      if(change == true){
+          //Audio function
+          setVolume(.2);
+          //feedback
+           this.vibrate("short"); //tátil
+           audioMaisVolume(); //audivel
+           blinkMaisVolume(); //visual
+           document.getElementById("myo_pose").innerHTML = "Mão para fora";
+           console.log("wave_out");
+         }
+         if(change == false){
+          //Time function
+          setTime(10);
+          //feedback
+          this.vibrate("short"); //tátil
+          audioAvancar(); //audivel
+          blinkAvancar(); //visual
+          document.getElementById("myo_pose").innerHTML = "Mão para fora";
+          console.log("wave_out");
+        }
+      });
+
+    </script>
+
+    <!-- End Scripts (global) -->
+
+    <title>Gesture4ALL</title>
+  </head>
+
+  <body>
+
+    <header id="header">
+     <div>
+      <a href="" class="logo">
+        <span class="symbol"><img src="images/gesture.svg" alt="" /></span><span class="title">gesture4All</span><br>
+      </a>
+    </div>
+  </header>
+
+  <h2>Opção 3: Testando com Myo</h2>
+  <a href="index.html">Voltar a tela anterior</a><br>
+  <video id="player" controls preload="auto">
+    <source src="assets/olhardigital.webm" type='video/webm; codecs="vp8, vorbis"' />
+    <source src="assets/olhardigital.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+  </video><br>
+  Último gesto reconhecido: <b><span id="myo_pose"></span></b><br>
+  Informações do Myo<br>
+  O myo está: <b><span id="myo_status"></span></b><br>
+  Bateria: <b><span id="myo_bat"></span>%</b><br>
+  Instruções:
+  <ul>
+    <li>Destravar: <b>Movimento de pinça 2x</b></li>
+    <li>Play: <b>Mão Aberta</b></li>
+    <li>Pause: <b>Mão Fechada</b></li>
+    <li>Mais Volume: <b>Mão para fora</b></li>
+    <li>Menos Volume: <b>Mão para dentro</b></li>
+    <li>Alternar modo de uso: <b>Tecla Enter</b></li>
+    <li>Avançar o vídeo: <b>Mão para fora</b></li>
+    <li>Retroceder o vídeo: <b>Mão para dentro</b></li>
+  </ul>
+</body>
+
+</html>
